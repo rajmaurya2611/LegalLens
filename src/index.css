@@ -1,0 +1,8 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+.custom-rate .ant-rate-star-zero .ant-rate-star-first,
+.custom-rate .ant-rate-star-zero .ant-rate-star-second {
+  color: #999 !important; /* Darker gray for unselected stars */
+}
