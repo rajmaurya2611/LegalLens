@@ -37,7 +37,7 @@ const comparisonQuestions = [
   "Compare the non-compete & non-solicitation provisions in the selected contracts?",
   "Compare the Limitation on Liability (Indemnification)?",
   "Compare the mechanism of determination of Indemnification?",
-  "Compare the Dispute Resolution Provisions?",
+  "Compare the selected NDAs?",
 ];
 
 export default function ComparisonPage() {
