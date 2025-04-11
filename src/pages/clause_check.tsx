@@ -1,4 +1,3 @@
-// clause.tsx
 import { useEffect, useState } from "react";
 import {
   Layout,
@@ -20,15 +19,14 @@ import ReactMarkdown from "react-markdown";
 import remarkGfm from "remark-gfm";
 import remarkBreaks from "remark-breaks";
 import logo from "../assets/logo.png";
-import { Link } from 'react-router-dom';
-
+import { Link } from "react-router-dom";
+ 
 const { Header, Sider, Content } = Layout;
 const { TextArea } = Input;
 const { Option } = Select;
-
-
+ 
 const API_BASE = import.meta.env.VITE_API_BASE;
-
+ 
 const predefinedClauses = [
   "Force Majeure",
   "Termination Clause",
@@ -36,9 +34,9 @@ const predefinedClauses = [
   "Limitation of Liability",
   "Dispute Resolution",
   "Governing Law",
-  "Payment Terms"
+  "Payment Terms",
 ];
-
+ 
 export default function ClauseCheckPage() {
   const [uploadedDocs, setUploadedDocs] = useState<string[]>([]);
   const [selectedDoc, setSelectedDoc] = useState<string | null>(null);
@@ -49,7 +47,7 @@ export default function ClauseCheckPage() {
   const [feedbackText, setFeedbackText] = useState("");
   const [feedbackRating, setFeedbackRating] = useState<number | null>(null);
   const [submittingFeedback, setSubmittingFeedback] = useState(false);
-
+ 
   const fetchDocuments = async () => {
     try {
       const res = await axios.get(`${API_BASE}/documents`);
@@ -63,11 +61,11 @@ export default function ClauseCheckPage() {
       message.error("Failed to fetch documents.");
     }
   };
-
+ 
   useEffect(() => {
     fetchDocuments();
   }, []);
-
+ 
   const analyzeClause = async () => {
     if (!selectedDoc || !clauseQuery.trim()) return;
     setLoading(true);
@@ -84,7 +82,7 @@ export default function ClauseCheckPage() {
       setLoading(false);
     }
   };
-
+ 
   const submitFeedback = async () => {
     if (!feedbackRating || !result) return;
     setSubmittingFeedback(true);
@@ -105,29 +103,33 @@ export default function ClauseCheckPage() {
       setSubmittingFeedback(false);
     }
   };
-
+ 
   return (
     <Layout style={{ minHeight: "100vh" }}>
       <Sider width={300} theme="dark" className="bg-[#1f1f1f]">
         <div className="p-4">
-        <div className="flex justify-center mb-4">
-      <Link to="/">
-        <img src={logo} alt="Logo" className="w-40" />
-      </Link>
-    </div>
-
-          <p className="text-sm text-white text-center mt-2 mb-1">Select Document</p>
+          <div className="flex justify-center mb-4">
+            <Link to="/">
+              <img src={logo} alt="Logo" className="w-40" />
+            </Link>
+          </div>
+ 
+          <p className="text-sm text-white text-center mt-2 mb-1">
+            Select Document
+          </p>
           <Select
             placeholder="Select Document"
             className="w-full mb-4"
             onChange={setSelectedDoc}
             value={selectedDoc || undefined}
           >
-            {uploadedDocs.map(doc => (
-              <Option key={doc} value={doc}>{doc}</Option>
+            {uploadedDocs.map((doc) => (
+              <Option key={doc} value={doc}>
+                {doc}
+              </Option>
             ))}
           </Select>
-
+ 
           <Select
             placeholder="Choose Predefined Clause (Optional)"
             className="w-full mb-2"
@@ -136,10 +138,12 @@ export default function ClauseCheckPage() {
             allowClear
           >
             {predefinedClauses.map((clause, idx) => (
-              <Option key={idx} value={clause}>{clause}</Option>
+              <Option key={idx} value={clause}>
+                {clause}
+              </Option>
             ))}
           </Select>
-
+ 
           <TextArea
             rows={4}
             className="mb-4"
@@ -147,7 +151,7 @@ export default function ClauseCheckPage() {
             value={clauseQuery}
             onChange={(e) => setClauseQuery(e.target.value)}
           />
-
+ 
           <Button
             block
             className="bg-[#FF4D4F] text-white"
@@ -161,7 +165,7 @@ export default function ClauseCheckPage() {
           </Button>
         </div>
       </Sider>
-
+ 
       <Layout>
         <Header className="bg-[#FF4D4F] px-6 text-white text-xl font-semibold shadow flex items-center justify-between">
           <span>📜 Clause Checker</span>
@@ -173,7 +177,7 @@ export default function ClauseCheckPage() {
             Refresh Docs
           </Button>
         </Header>
-
+ 
         <Content className="p-8 bg-[#f4f4f4] overflow-y-auto">
           <div className="max-w-6xl mx-auto bg-white rounded shadow p-6">
             {loading ? (
@@ -182,8 +186,24 @@ export default function ClauseCheckPage() {
               <>
                 <ReactMarkdown
                   remarkPlugins={[remarkGfm, remarkBreaks]}
-                  children={result}
-                />
+                  components={{
+                    p: ({ node, ...props }) => (
+                      <p className="mb-2 text-sm text-gray-800" {...props} />
+                    ),
+                    ul: ({ node, ...props }) => (
+                      <ul className="pl-5 list-disc space-y-1 text-sm text-gray-800" {...props} />
+                    ),
+                    ol: ({ node, ...props }) => (
+                      <ol className="pl-5 list-decimal space-y-1 text-sm text-gray-800" {...props} />
+                    ),
+                    li: ({ node, ...props }) => (
+                      <li {...props} />
+                    ),
+                    br: () => <br />,
+                  }}
+                >
+                  {result}
+                </ReactMarkdown>
                 <div className="text-right mt-4">
                   <MessageOutlined
                     className="text-gray-500 cursor-pointer hover:text-gray-800"
@@ -192,12 +212,14 @@ export default function ClauseCheckPage() {
                 </div>
               </>
             ) : (
-              <p className="text-gray-400 italic">Enter a clause to check and click "Check Clause".</p>
+              <p className="text-gray-400 italic">
+                Enter a clause to check and click "Check Clause".
+              </p>
             )}
           </div>
         </Content>
       </Layout>
-
+ 
       <Modal
         open={isFeedbackModalOpen}
         title="Submit Feedback"
@@ -207,7 +229,9 @@ export default function ClauseCheckPage() {
         confirmLoading={submittingFeedback}
         okButtonProps={{ disabled: feedbackRating === null }}
       >
-        <Typography.Text strong>How helpful was this response?</Typography.Text>
+        <Typography.Text strong>
+          How helpful was this response?
+        </Typography.Text>
         <div className="my-2">
           <Rate
             className="custom-rate"
@@ -225,3 +249,4 @@ export default function ClauseCheckPage() {
     </Layout>
   );
 }
+ 

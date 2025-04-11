@@ -1,4 +1,3 @@
-
 import { useNavigate } from "react-router-dom";
 import Logo from "../assets/logo.png";
 import AnalysisImage from "../assets/analysis_image.jpg";
@@ -7,15 +6,15 @@ import RiskAnalysisImage from "../assets/risk_analysis_image.jpg";
 import ClauseCheckImage from "../assets/clause_check_image.jpg";
 import { CardContainer, CardBody, CardItem } from "../components/ui/3d-card";
 import HeroImage from "../assets/Hero Image.png";
-
+ 
 export default function HomePage() {
   const navigate = useNavigate();
-
+ 
   const cards = [
     {
       title: "Analysis",
       image: AnalysisImage,
-      description: "Smart contract structure and audit insights.",
+      description: "Smart contract content and structure analysis.",
       route: "/analysis",
     },
     {
@@ -27,35 +26,35 @@ export default function HomePage() {
     {
       title: "Risk Analysis",
       image: RiskAnalysisImage,
-      description: "Analyze various Risks around the document.",
+      description: "Comprehensive analysis of potential risks associated with the document.",
       route: "/risk_analysis",
     },
     {
       title: "Clause Check",
       image: ClauseCheckImage,
-      description: "Analyze various Clauses around the document.",
+      description: "Check for missing and incomplete clauses.",
       route: "/clause",
     },
   ];
-
+ 
   return (
-    <div 
+    <div
       className="min-h-screen w-full bg-cover bg-center flex flex-col items-center justify-center relative"
       style={{ backgroundImage: `url(${HeroImage})` }}
     >
       {/* Black Overlay */}
       <div className="absolute inset-0 bg-black opacity-50 z-0" />
-  
+ 
       {/* Logo in top-left */}
       <img src={Logo} alt="Logo" className="absolute top-6 left-6 w-40 z-10" />
-  
+ 
       {/* Main Content */}
       <main className="p-8 relative z-10">
         <h1 className="text-4xl font-bold text-center text-gray-100 mb-2">Legallens AI</h1>
         <p className="text-center font-semibold  text-lg text-gray-400 mb-10">
           Contract Intelligence at a Glance...
         </p>
-  
+ 
         <div className="grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-4 gap-4 max-w-7xl mx-auto">
           {cards.map((card, index) => (
            <CardContainer key={index} className="inter-var">
@@ -94,7 +93,7 @@ export default function HomePage() {
                  onClick={() => navigate(card.route)}
                  className="text-white bg-gradient-to-r from-red-500 via-pink-500 to-blue-500  px-4 py-2 rounded-md text-sm font-semibold transition"
                >
-                 Visit 
+                 Visit
                </button>
              </div>
            </CardBody>
@@ -105,5 +104,5 @@ export default function HomePage() {
       </main>
     </div>
   );
-  
+ 
 }

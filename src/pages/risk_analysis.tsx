@@ -21,20 +21,20 @@ import remarkGfm from "remark-gfm";
 import remarkBreaks from "remark-breaks";
 import logo from "../assets/logo.png";
 import { Link } from 'react-router-dom';
-
+ 
 const { Header, Sider, Content } = Layout;
 const { TextArea } = Input;
 const { Option } = Select;
-
-
+ 
+ 
 const API_BASE = import.meta.env.VITE_API_BASE;
-
+ 
 const perspectives = [
   "Both Parties",
   "Buyer/Purchaser",
   "Seller/Vendor"
 ];
-
+ 
 export default function RiskAnalysisPage() {
   const [uploadedDocs, setUploadedDocs] = useState<string[]>([]);
   const [selectedDoc, setSelectedDoc] = useState<string | null>(null);
@@ -45,7 +45,7 @@ export default function RiskAnalysisPage() {
   const [feedbackText, setFeedbackText] = useState("");
   const [feedbackRating, setFeedbackRating] = useState<number | null>(null);
   const [submittingFeedback, setSubmittingFeedback] = useState(false);
-
+ 
   const fetchDocuments = async () => {
     try {
       const res = await axios.get(`${API_BASE}/documents`);
@@ -60,11 +60,11 @@ export default function RiskAnalysisPage() {
       message.error("Failed to fetch documents.");
     }
   };
-
+ 
   useEffect(() => {
     fetchDocuments();
   }, []);
-
+ 
   const analyzeRisk = async () => {
     if (!selectedDoc) return;
     setLoading(true);
@@ -81,7 +81,7 @@ export default function RiskAnalysisPage() {
       setLoading(false);
     }
   };
-
+ 
   const submitFeedback = async () => {
     if (!feedbackRating || !result) return;
     setSubmittingFeedback(true);
@@ -102,7 +102,7 @@ export default function RiskAnalysisPage() {
       setSubmittingFeedback(false);
     }
   };
-
+ 
   return (
     <Layout style={{ minHeight: "100vh" }}>
       <Sider width={300} theme="dark" className="bg-[#1f1f1f]">
@@ -112,7 +112,7 @@ export default function RiskAnalysisPage() {
         <img src={logo} alt="Logo" className="w-40" />
       </Link>
     </div>
-
+ 
           <p className="text-sm text-white text-center mt-2 mb-1">Select Document</p>
           <Select
             placeholder="Select Document"
@@ -124,7 +124,7 @@ export default function RiskAnalysisPage() {
               <Option key={doc} value={doc}>{doc}</Option>
             ))}
           </Select>
-
+ 
           <p className="text-sm text-white text-center mt-2 mb-1">Select Perspective</p>
           <Select
             value={perspective}
@@ -135,7 +135,7 @@ export default function RiskAnalysisPage() {
               <Option key={p} value={p}>{p}</Option>
             ))}
           </Select>
-
+ 
           <Button
             block
             className="mt-6 bg-[#FF4D4F] text-white"
@@ -149,7 +149,7 @@ export default function RiskAnalysisPage() {
           </Button>
         </div>
       </Sider>
-
+ 
       <Layout>
         <Header className="bg-[#FF4D4F] px-6 text-white text-xl font-semibold shadow flex items-center justify-between">
           <span>📊 Risk Analysis</span>
@@ -161,7 +161,7 @@ export default function RiskAnalysisPage() {
             Refresh Docs
           </Button>
         </Header>
-
+ 
         <Content className="p-8 bg-[#f4f4f4] overflow-y-auto">
           <div className="max-w-6xl mx-auto bg-white rounded shadow p-6">
             {loading ? (
@@ -169,9 +169,22 @@ export default function RiskAnalysisPage() {
             ) : result ? (
               <>
                 <ReactMarkdown
-                  remarkPlugins={[remarkGfm, remarkBreaks]}
-                  children={result}
-                />
+                remarkPlugins={[remarkGfm, remarkBreaks]}
+                components={{
+    p: ({ node, ...props }) => <p className="mb-2 text-gray-800 text-sm" {...props} />,
+    ul: ({ node, ...props }) => (
+      <ul className="pl-5 list-disc space-y-1 text-sm text-gray-800" {...props} />
+    ),
+    ol: ({ node, ...props }) => (
+      <ol className="pl-5 list-decimal space-y-1 text-sm text-gray-800" {...props} />
+    ),
+    li: ({ node, ...props }) => <li {...props} />,
+    br: () => <br />,
+  }}
+>
+            {result}
+            </ReactMarkdown>
+ 
                 <div className="text-right mt-4">
                   <MessageOutlined
                     className="text-gray-500 cursor-pointer hover:text-gray-800"
@@ -185,7 +198,7 @@ export default function RiskAnalysisPage() {
           </div>
         </Content>
       </Layout>
-
+ 
       <Modal
         open={isFeedbackModalOpen}
         title="Submit Feedback"
